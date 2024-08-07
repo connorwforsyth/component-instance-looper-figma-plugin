@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    input, textarea, button, select {
+      display: block;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <h2>Text List to Component Instances</h2>
+  <textarea id="text-list" rows="10" cols="30" placeholder="Enter your text list here..."></textarea>
+  <button id="refresh">Refresh Selected Component</button>
+  <select id="text-property" disabled>
+    <option value="">Select text property</option>
+  </select>
+  <button id="generate" disabled>Generate Instances</button>
+  <script>
+    document.getElementById('refresh').onclick = () => {
+      parent.postMessage({ pluginMessage: { type: 'refresh-selection' } }, '*');
+    };
+
+    document.getElementById('generate').onclick = () => {
+      const textList = document.getElementById('text-list').value;
+      const textProperty = document.getElementById('text-property').value;
+      parent.postMessage({ pluginMessage: { type: 'generate-instances', textList, textProperty } }, '*');
+    };
+
+    onmessage = (event) => {
+      const message = event.data.pluginMessage;
+      if (message.type === 'update-properties') {
+        const textPropertySelect = document.getElementById('text-property');
+        textPropertySelect.innerHTML = '<option value="">Select text property</option>';
+        message.properties.forEach(property => {
+          const option = document.createElement('option');
+          option.value = property;
+          option.textContent = property;
+          textPropertySelect.appendChild(option);
+        });
+        textPropertySelect.disabled = message.properties.length === 0;
+        document.getElementById('generate').disabled = message.properties.length === 0;
+      }
+    };
+  </script>
+</body>
+</html>
