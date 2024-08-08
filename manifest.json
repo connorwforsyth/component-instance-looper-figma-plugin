@@ -12,7 +12,8 @@
   "ui": "ui.html",
   "networkAccess": {
     "allowedDomains": [
-      "none"
+      "https://www.myinstants.com",
+      "https://cdn.tailwindcss.com"
     ]
   }
 }

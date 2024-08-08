@@ -1,51 +1,181 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-    input, textarea, button, select {
-      display: block;
-      margin: 10px 0;
-    }
-  </style>
-</head>
-<body>
-  <h2>Text List to Component Instances</h2>
-  <textarea id="text-list" rows="10" cols="30" placeholder="Enter your text list here..."></textarea>
-  <button id="refresh">Refresh Selected Component</button>
-  <select id="text-property" disabled>
-    <option value="">Select text property</option>
-  </select>
-  <button id="generate" disabled>Generate Instances</button>
-  <script>
-    document.getElementById('refresh').onclick = () => {
-      parent.postMessage({ pluginMessage: { type: 'refresh-selection' } }, '*');
-    };
+  <head>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="p-2 bg-gray-100">
+    <div class="flex flex-col gap-2 h-full">
+      <h2 class="font-bold mb-4">Text List to Component Instances</h2>
+      <!-- Textarea for inputting the text list -->
+      <textarea
+    class="border-2 border-gray-300 p-2 text-sm rounded-md resize-none w-full h-48 mb-4"
+    id="text-list-input"
+    placeholder="Enter your text list here..."
+></textarea>
 
-    document.getElementById('generate').onclick = () => {
-      const textList = document.getElementById('text-list').value;
-      const textProperty = document.getElementById('text-property').value;
-      parent.postMessage({ pluginMessage: { type: 'generate-instances', textList, textProperty } }, '*');
-    };
 
-    onmessage = (event) => {
-      const message = event.data.pluginMessage;
-      if (message.type === 'update-properties') {
-        const textPropertySelect = document.getElementById('text-property');
-        textPropertySelect.innerHTML = '<option value="">Select text property</option>';
-        message.properties.forEach(property => {
-          const option = document.createElement('option');
-          option.value = property;
-          option.textContent = property;
-          textPropertySelect.appendChild(option);
-        });
-        textPropertySelect.disabled = message.properties.length === 0;
-        document.getElementById('generate').disabled = message.properties.length === 0;
+      <!-- Display the currently selected component instance -->
+      <div
+        id="selected-component"
+      >
+      <p class="text-gray-600">
+          Select a component instance on the canvas.
+        </p>
+      </div>
+
+      <div id="generate-buttons" class="hidden *:mb-2 *:p-2 *:rounded-md ">
+      <!-- Dropdown to select the text property of the selected component instance -->
+      <select
+        id="text-property-select"
+        class="border-2 border-gray-300"
+        disabled
+      >
+        <option value="">Select text property</option>
+      </select>
+
+      <!-- Button to generate instances based on the text list -->
+      <button
+        id="generate-button"
+        class="bg-blue-600 text-white"
+        disabled
+      >
+     
+        Generate Instances
+        <span class="inline-flex gap-[0.3rem] text-white text-xs *:rounded-sm *:px-[0.2rem] *:py-[0.1rem] *:bg-blue-500">
+          <span>⌘</span>
+          <span>↵</span>
+        </span>
+      </button>
+    </div>
+
+    <div class="flex-grow"></div>
+      <!-- Display the count of lines in the text list -->
+      <div class="font-mono text-xs font w-full border-t-2 py-2">
+        <span id="line-count" class="font-bold">0</span>
+        <span class="text-gray-700"> Instances to create</span>
+      </div>
+    </div>
+    <script>
+      // Function to handle the generate button click
+      const generateButton = document.getElementById("generate-button");
+      generateButton.onclick = function () {
+        GenerateInstances();
+      };
+
+      const generateButtons = document.getElementById("generate-buttons");
+
+      function GenerateInstances() {
+        const textList = document.getElementById("text-list-input").value;
+        const textProperty = document.getElementById(
+          "text-property-select"
+        ).value;
+        parent.postMessage(
+          {
+            pluginMessage: {
+              type: "generate-instances",
+              textList,
+              textProperty,
+            },
+          },
+          "*"
+        );
+
+        // Create an audio object to play the sound effect
+        const popSound = new Audio(
+          "https://www.myinstants.com/media/sounds/comedy_pop_finger_in_mouth_001.mp3"
+        );
+
+        if (popSound) {
+          console.log("Playing sound...");
+          popSound
+            .play()
+            .then(() => {
+              console.log("Sound played successfully.");
+            })
+            .catch((error) => {
+              console.error("Error playing sound:", error);
+            });
+        } else {
+          console.error("Audio element not created correctly.");
+        }
       }
-    };
-  </script>
-</body>
+
+      
+      // Function to update the line count
+      function updateLineCount() {
+        const textList = document.getElementById("text-list-input").value;
+        const lines = textList.split("\n").filter((line) => line.trim() !== "");
+        const lineCount = lines.length;
+        const lineCountDiv = document.getElementById("line-count");
+        lineCountDiv.innerHTML = `${lineCount}`;
+      }
+
+      // Add event listener to update the line count when the text list changes
+      document
+        .getElementById("text-list-input")
+        .addEventListener("input", updateLineCount);
+
+      // Function to handle messages from the plugin
+      onmessage = (event) => {
+        const message = event.data.pluginMessage;
+        const selectedComponentDiv =
+          document.getElementById("selected-component");
+        const textPropertySelect = document.getElementById(
+          "text-property-select"
+        );
+
+        if (message.type === "update-selection") {
+          if (message.componentName) {
+            selectedComponentDiv.innerHTML = `<p class="text-gray-600 text-sm font-semibold"><span class=" font-normal font-mono">Instance</span> ${message.componentName} <span class=" font-normal font-mono">selected<span></p>`} else {
+            selectedComponentDiv.innerHTML = `<p class="text-gray-600 text-sm font-mono">Select a single <span class="font-semibold">component instance</span> on the canvas.
+        </p>`;
+          }
+
+          
+          if(message.type === "update-selection"){
+            if (message.componentName){
+            generateButtons.classList.remove("hidden")}
+            else {
+              generateButtons.classList.add("hidden")
+            }
+          }
+
+          textPropertySelect.innerHTML =
+            '<option value="">Select text property</option>';
+
+          // Populate the dropdown with the available text properties
+          message.properties.forEach((property) => {
+            const option = document.createElement("option");
+            option.value = property.originalKey;
+            option.textContent = property.cleanName;
+            textPropertySelect.appendChild(option);
+          });
+
+          // Remove the placeholder option  
+          if (textPropertySelect.options.length > 1) {
+            textPropertySelect.remove(0);
+          }
+
+          // Set the default selected option to the first property in the list
+          if (textPropertySelect.options.length > 0) {
+            textPropertySelect.selectedIndex = 0;
+          }
+
+          // Enable or disable the dropdown and generate button based on the available properties
+          textPropertySelect.disabled = message.properties.length === 0;
+          document.getElementById("generate-button").disabled =
+            message.properties.length === 0;
+        }
+
+        // Add keyboard shortcut for generating instances
+        document.addEventListener("keydown", function (e) {
+          if (e.metaKey && e.key === "Enter") {
+            if (message.properties.length !== 0) {
+              GenerateInstances();
+            }
+          }
+        });
+      };
+    </script>
+  </body>
 </html>
