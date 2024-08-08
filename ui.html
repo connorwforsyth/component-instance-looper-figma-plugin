@@ -2,13 +2,14 @@
 <html>
   <head>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
   </head>
   <body class="p-2 bg-gray-100">
     <div class="flex flex-col gap-2 h-full">
       <h2 class="font-bold mb-4">Text List to Component Instances</h2>
       <!-- Textarea for inputting the text list -->
       <textarea
-    class="border-2 border-gray-300 p-2 text-sm rounded-md resize-none w-full h-48 mb-4"
+    class=" focus:border-2 focus:outline-none border-2 border-gray-300 p-2 text-sm rounded-md resize-none w-full h-48 mb-4"
     id="text-list-input"
     placeholder="Enter your text list here..."
 ></textarea>
@@ -23,25 +24,26 @@
         </p>
       </div>
 
-      <div id="generate-buttons" class="hidden *:mb-2 *:p-2 *:rounded-md ">
+      <div id="generate-buttons" class="hidden *:w-full *:mb-2 *:text-sm *:p-2 *:rounded-md">
       <!-- Dropdown to select the text property of the selected component instance -->
       <select
         id="text-property-select"
-        class="border-2 border-gray-300"
+        class="border-2 border-gray-300 w-full focus:ring-1 focus:border-2 focus:outline-none"
         disabled
       >
-        <option value="">Select text property</option>
+      <option value="">Select text property</option>
       </select>
+      
 
       <!-- Button to generate instances based on the text list -->
       <button
         id="generate-button"
-        class="bg-blue-600 text-white"
+        class="bg-blue-600 text-white select-none focus:ring-1 focus:outline-none "
         disabled
       >
      
         Generate Instances
-        <span class="inline-flex gap-[0.3rem] text-white text-xs *:rounded-sm *:px-[0.2rem] *:py-[0.1rem] *:bg-blue-500">
+        <span class="ml-1 inline-flex gap-[4px] text-xs text-white font-semibold *:rounded-sm *:px-[4px] *:py-[2px] *:bg-blue-500">
           <span>⌘</span>
           <span>↵</span>
         </span>
@@ -126,7 +128,7 @@
 
         if (message.type === "update-selection") {
           if (message.componentName) {
-            selectedComponentDiv.innerHTML = `<p class="text-gray-600 text-sm font-semibold"><span class=" font-normal font-mono">Instance</span> ${message.componentName} <span class=" font-normal font-mono">selected<span></p>`} else {
+            selectedComponentDiv.innerHTML = `<p class="text-gray-600 text-sm font-mono">Instance of <span class="font-semibold">${message.componentName}</span> selected.</p>`} else {
             selectedComponentDiv.innerHTML = `<p class="text-gray-600 text-sm font-mono">Select a single <span class="font-semibold">component instance</span> on the canvas.
         </p>`;
           }
