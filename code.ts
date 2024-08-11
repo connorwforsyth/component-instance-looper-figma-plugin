@@ -4,7 +4,7 @@ figma.showUI(__html__, { width: 300, height: 600 });
 async function updateSelection() {
   const selectedNodes = figma.currentPage.selection;
 
-  if (selectedNodes.length !== 1 || selectedNodes[0].type !== "INSTANCE") {
+  if (selectedNodes.length === 0 || selectedNodes.some(node => node.type !== "INSTANCE")) {
     figma.ui.postMessage({
       type: "update-selection",
       componentName: null,
@@ -13,8 +13,17 @@ async function updateSelection() {
     return;
   }
 
-  const instance = selectedNodes[0];
-  
+  const instance = selectedNodes[0] as InstanceNode;
+
+  if (instance.type !== "INSTANCE") {
+    figma.ui.postMessage({
+      type: "update-selection",
+      componentName: null,
+      properties: [],
+    });
+    return;
+  }
+
   const properties = Object.keys(instance.componentProperties)
     .filter((key) => instance.componentProperties[key].type === "TEXT")
     .map((key) => ({
@@ -36,6 +45,8 @@ figma.on("selectionchange", updateSelection);
 figma.ui.onmessage = async (msg) => {
   if (msg.type === "generate-instances") {
     handleGenerateInstances(msg.textList, msg.textProperty);
+  } else if (msg.type === "replace-text-instances") {
+    handleReplaceTextInstances(msg.textList, msg.textProperty);
   }
 };
 
@@ -51,7 +62,7 @@ async function handleGenerateInstances(textList: string, textProperty: string) {
     return;
   }
 
-  const instance = selectedNodes[0];
+  const instance = selectedNodes[0] as InstanceNode;
   const instanceHeight = instance.height;
   const spacing = instanceHeight * 0.5;
 
@@ -84,6 +95,37 @@ async function handleGenerateInstances(textList: string, textProperty: string) {
 
   figma.currentPage.selection = newInstances;
   figma.viewport.scrollAndZoomIntoView(newInstances);
+}
+
+// Function to handle replacing text within selected instances based on the text list
+async function handleReplaceTextInstances(textList: string, textProperty: string) {
+  const lines: string[] = textList
+    .split("\n")
+    .filter((line: string) => line.trim() !== "");
+  const selectedNodes = figma.currentPage.selection;
+
+  if (selectedNodes.length === 0 || selectedNodes.some(node => node.type !== "INSTANCE")) {
+    figma.notify("Please select one or more component instances.");
+    return;
+  }
+
+  if (lines.length !== selectedNodes.length) {
+    figma.notify("The number of lines in the text list does not match the number of selected instances.");
+    return;
+  }
+
+  if (!textProperty) {
+    figma.notify("Please select a text property.");
+    return;
+  }
+
+  selectedNodes.forEach((node, index) => {
+    if (node.type === "INSTANCE") {
+      (node as InstanceNode).setProperties({ [textProperty]: lines[index] });
+    }
+  });
+
+  figma.notify("Text replaced in selected instances.");
 }
 
 // Initial call to update the selection when the plugin is first loaded

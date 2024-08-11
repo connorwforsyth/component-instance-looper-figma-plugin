@@ -9,10 +9,10 @@
       <h2 class="font-bold mb-4">Text List to Component Instances</h2>
       <!-- Textarea for inputting the text list -->
       <textarea
-    class="focus:border-2 focus:outline-none border-2 border-gray-300 p-2 text-sm rounded-md resize-none w-full h-48 mb-4"
-    id="text-list-input"
-    placeholder="Enter your text list here..."
-></textarea>
+        class="focus:border-2 focus:outline-none border-2 border-gray-300 p-2 text-sm rounded-md resize-none w-full h-48 mb-4"
+        id="text-list-input"
+        placeholder="Enter your text list here..."
+      ></textarea>
 
       <!-- Display the currently selected component instance -->
       <div id="selected-component">
@@ -41,6 +41,15 @@
             <span>↵</span>
           </span>
         </button>
+
+        <!-- Button to replace text within selected instances -->
+        <button
+          id="replace-button"
+          class="border-2 border-blue-500 text-blue-600 bg-white select-none focus:ring-1 focus:outline-none"
+          disabled
+        >
+          Replace text in selected instances
+        </button>
       </div>
 
       <div class="flex-grow"></div>
@@ -55,6 +64,11 @@
       const generateButton = document.getElementById("generate-button");
       generateButton.onclick = function () {
         GenerateInstances();
+      };
+
+      const replaceButton = document.getElementById("replace-button");
+      replaceButton.onclick = function () {
+        ReplaceTextInInstances();
       };
 
       const generateButtons = document.getElementById("generate-buttons");
@@ -93,6 +107,23 @@
         } else {
           console.error("Audio element not created correctly.");
         }
+      }
+
+      function ReplaceTextInInstances() {
+        const textList = document.getElementById("text-list-input").value;
+        const textProperty = document.getElementById(
+          "text-property-select"
+        ).value;
+        parent.postMessage(
+          {
+            pluginMessage: {
+              type: "replace-text-instances",
+              textList,
+              textProperty,
+            },
+          },
+          "*"
+        );
       }
 
       // Function to update the line count
@@ -157,6 +188,8 @@
           // Enable or disable the dropdown and generate button based on the available properties
           textPropertySelect.disabled = message.properties.length === 0;
           document.getElementById("generate-button").disabled =
+            message.properties.length === 0;
+          document.getElementById("replace-button").disabled =
             message.properties.length === 0;
         }
 
