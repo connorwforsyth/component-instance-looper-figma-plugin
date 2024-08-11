@@ -9,48 +9,41 @@
       <h2 class="font-bold mb-4">Text List to Component Instances</h2>
       <!-- Textarea for inputting the text list -->
       <textarea
-    class=" focus:border-2 focus:outline-none border-2 border-gray-300 p-2 text-sm rounded-md resize-none w-full h-48 mb-4"
+    class="focus:border-2 focus:outline-none border-2 border-gray-300 p-2 text-sm rounded-md resize-none w-full h-48 mb-4"
     id="text-list-input"
     placeholder="Enter your text list here..."
 ></textarea>
 
-
       <!-- Display the currently selected component instance -->
-      <div
-        id="selected-component"
-      >
-      <p class="text-gray-600">
-          Select a component instance on the canvas.
-        </p>
+      <div id="selected-component">
+        <p class="text-gray-600">Select a component instance on the canvas.</p>
       </div>
 
       <div id="generate-buttons" class="hidden *:mb-2 *:text-sm *:p-2 *:rounded-md">
-      <!-- Dropdown to select the text property of the selected component instance -->
-      <select
-        id="text-property-select"
-        class="border-2 border-gray-300 w-full focus:ring-1 focus:border-2 focus:outline-none"
-        disabled
-      >
-      <option value="">Select text property</option>
-      </select>
-      
+        <!-- Dropdown to select the text property of the selected component instance -->
+        <select
+          id="text-property-select"
+          class="border-2 border-gray-300 w-full focus:ring-1 focus:border-2 focus:outline-none"
+          disabled
+        >
+          <option value="">Select text property</option>
+        </select>
 
-      <!-- Button to generate instances based on the text list -->
-      <button
-        id="generate-button"
-        class="bg-blue-600 text-white select-none focus:ring-1 focus:outline-none "
-        disabled
-      >
-     
-        Generate Instances
-        <span class="inline-flex gap-[4px] pl-4 text-xs text-white font-semibold *:rounded-sm *:px-[4px] *:py-[2px] *:bg-blue-500">
-          <span>⌘</span>
-          <span>↵</span>
-        </span>
-      </button>
-    </div>
+        <!-- Button to generate instances based on the text list -->
+        <button
+          id="generate-button"
+          class="bg-blue-600 text-white select-none focus:ring-1 focus:outline-none"
+          disabled
+        >
+          Generate Instances
+          <span class="inline-flex gap-[4px] pl-4 text-xs text-white font-semibold *:rounded-sm *:px-[4px] *:py-[2px] *:bg-blue-500">
+            <span>⌘</span>
+            <span>↵</span>
+          </span>
+        </button>
+      </div>
 
-    <div class="flex-grow"></div>
+      <div class="flex-grow"></div>
       <!-- Display the count of lines in the text list -->
       <div class="font-mono text-xs font w-full border-t-2 py-2">
         <span id="line-count" class="font-bold">0</span>
@@ -102,7 +95,6 @@
         }
       }
 
-      
       // Function to update the line count
       function updateLineCount() {
         const textList = document.getElementById("text-list-input").value;
@@ -128,17 +120,16 @@
 
         if (message.type === "update-selection") {
           if (message.componentName) {
-            selectedComponentDiv.innerHTML = `<p class="text-gray-600 text-sm font-mono">Instance of <span class="font-semibold">${message.componentName}</span> selected.</p>`} else {
-            selectedComponentDiv.innerHTML = `<p class="text-gray-600 text-sm font-mono">Select a single <span class="font-semibold">component instance</span> on the canvas.
-        </p>`;
+            selectedComponentDiv.innerHTML = `<p class="text-gray-600 text-sm font-mono">Instance of <span class="font-semibold">${message.componentName}</span> selected.</p>`;
+          } else {
+            selectedComponentDiv.innerHTML = `<p class="text-gray-600 text-sm font-mono">Select a single <span class="font-semibold">component instance</span> on the canvas.</p>`;
           }
 
-          
-          if(message.type === "update-selection"){
-            if (message.componentName){
-            generateButtons.classList.remove("hidden")}
-            else {
-              generateButtons.classList.add("hidden")
+          if (message.type === "update-selection") {
+            if (message.componentName) {
+              generateButtons.classList.remove("hidden");
+            } else {
+              generateButtons.classList.add("hidden");
             }
           }
 
@@ -153,7 +144,7 @@
             textPropertySelect.appendChild(option);
           });
 
-          // Remove the placeholder option  
+          // Remove the placeholder option
           if (textPropertySelect.options.length > 1) {
             textPropertySelect.remove(0);
           }
