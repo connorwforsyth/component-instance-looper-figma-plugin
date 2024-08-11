@@ -15,8 +15,9 @@
       ></textarea>
 
       <!-- Display the currently selected component instance -->
-      <div id="selected-component">
-        <p class="text-gray-600">Select a component instance on the canvas.</p>
+      <div class="*:text-gray-600" id="selected-component">
+        <p>Select a single component instance on the canvas to generate instances.</p>
+        <p >Select a multiple component instance on the canvas to replace instances.</p>
       </div>
 
       <div id="generate-buttons" class="hidden *:mb-2 *:text-sm *:p-2 *:rounded-md">
@@ -45,10 +46,10 @@
         <!-- Button to replace text within selected instances -->
         <button
           id="replace-button"
-          class="border-2 border-blue-500 text-blue-600 bg-white select-none focus:ring-1 focus:outline-none"
+          class="border-2 border-gray-300 text-gray-700 select-none focus:ring-1 focus:outline-none"
           disabled
         >
-          Replace text in selected instances
+          Replace Text
         </button>
       </div>
 
@@ -56,7 +57,7 @@
       <!-- Display the count of lines in the text list -->
       <div class="font-mono text-xs font w-full border-t-2 py-2">
         <span id="line-count" class="font-bold">0</span>
-        <span class="text-gray-700"> Instances to create</span>
+        <span class="text-gray-700"> Instances to <span id="selection-action">create</span></span>
       </div>
     </div>
     <script>
@@ -153,7 +154,8 @@
           if (message.componentName) {
             selectedComponentDiv.innerHTML = `<p class="text-gray-600 text-sm font-mono">Instance of <span class="font-semibold">${message.componentName}</span> selected.</p>`;
           } else {
-            selectedComponentDiv.innerHTML = `<p class="text-gray-600 text-sm font-mono">Select a single <span class="font-semibold">component instance</span> on the canvas.</p>`;
+            selectedComponentDiv.innerHTML = `<p class="text-gray-600 text-sm font-mono">Select a <span class="font-semibold"> single component instance</span> on the canvas to generate components.</p>
+            <p class="text-gray-600 text-sm  mt-4 font-mono">Select <span class="font-semibold"> multiple component instances</span> to replace text within components.</p>`;
           }
 
           if (message.type === "update-selection") {
@@ -185,12 +187,15 @@
             textPropertySelect.selectedIndex = 0;
           }
 
-          // Enable or disable the dropdown and generate button based on the available properties
+          // Enable or disable the dropdown and buttons based on the available properties
           textPropertySelect.disabled = message.properties.length === 0;
-          document.getElementById("generate-button").disabled =
-            message.properties.length === 0;
-          document.getElementById("replace-button").disabled =
-            message.properties.length === 0;
+          if (message.selectionCount === 1) {
+            document.getElementById("generate-button").style.display = "inline-block";
+            document.getElementById("replace-button").style.display = "none";
+          } else if (message.selectionCount > 1) {
+            document.getElementById("generate-button").style.display = "none";
+            document.getElementById("replace-button").style.display = "inline-block";
+          }
         }
 
         // Add keyboard shortcut for generating instances

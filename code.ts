@@ -9,6 +9,7 @@ async function updateSelection() {
       type: "update-selection",
       componentName: null,
       properties: [],
+      selectionCount: selectedNodes.length,
     });
     return;
   }
@@ -20,6 +21,7 @@ async function updateSelection() {
       type: "update-selection",
       componentName: null,
       properties: [],
+      selectionCount: selectedNodes.length,
     });
     return;
   }
@@ -35,6 +37,7 @@ async function updateSelection() {
     type: "update-selection",
     componentName: instance.name,
     properties,
+    selectionCount: selectedNodes.length,
   });
 }
 
