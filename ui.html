@@ -61,6 +61,7 @@
       </div>
     </div>
     <script>
+
       // Function to handle the generate button click
       const generateButton = document.getElementById("generate-button");
       generateButton.onclick = function () {
@@ -192,9 +193,11 @@
           if (message.selectionCount === 1) {
             document.getElementById("generate-button").style.display = "inline-block";
             document.getElementById("replace-button").style.display = "none";
+            document.getElementById("selection-action").innerText = "create";
           } else if (message.selectionCount > 1) {
             document.getElementById("generate-button").style.display = "none";
             document.getElementById("replace-button").style.display = "inline-block";
+            document.getElementById("selection-action").innerText = "modify";
           }
         }
 
