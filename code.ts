@@ -62,12 +62,24 @@ async function handleGenerateInstances(textList: string, textProperty: string) {
 
   const newInstances: InstanceNode[] = [];
 
-  for (let i = 0; i < lines.length; i++) {
-    const newInstance = instance.clone();
-    newInstance.y = instance.y + (instanceHeight + spacing) * (i + 1);
-    newInstance.setProperties({ [textProperty]: lines[i] });
-    figma.currentPage.appendChild(newInstance);
-    newInstances.push(newInstance);
+  // Check if the instance is inside a frame
+  const parent = instance.parent;
+  if (parent && parent.type === 'FRAME') {
+    for (let i = 0; i < lines.length; i++) {
+      const newInstance = instance.clone();
+      newInstance.y = instance.y + (instanceHeight + spacing) * (i + 1);
+      newInstance.setProperties({ [textProperty]: lines[i] });
+      parent.appendChild(newInstance);
+      newInstances.push(newInstance);
+    }
+  } else {
+    for (let i = 0; i < lines.length; i++) {
+      const newInstance = instance.clone();
+      newInstance.y = instance.y + (instanceHeight + spacing) * (i + 1);
+      newInstance.setProperties({ [textProperty]: lines[i] });
+      figma.currentPage.appendChild(newInstance);
+      newInstances.push(newInstance);
+    }
   }
 
   figma.currentPage.selection = newInstances;
