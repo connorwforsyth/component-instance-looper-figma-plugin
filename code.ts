@@ -46,6 +46,7 @@ figma.on("selectionchange", updateSelection);
 
 // Handle messages from the UI
 figma.ui.onmessage = async (msg) => {
+  console.log("Received message:", msg);
   if (msg.type === "generate-instances") {
     handleGenerateInstances(msg.textList, msg.textProperty);
   } else if (msg.type === "replace-text-instances") {
@@ -55,10 +56,13 @@ figma.ui.onmessage = async (msg) => {
 
 // Function to handle generating instances based on the text list
 async function handleGenerateInstances(textList: string, textProperty: string) {
+  console.log("Handling generate instances:", { textList, textProperty });
   const lines: string[] = textList
     .split("\n")
     .filter((line: string) => line.trim() !== "");
   const selectedNodes = figma.currentPage.selection;
+
+  console.log("Selected nodes:", selectedNodes);
 
   if (selectedNodes.length !== 1 || selectedNodes[0].type !== "INSTANCE") {
     figma.notify("Please select a single component instance.");
@@ -98,14 +102,18 @@ async function handleGenerateInstances(textList: string, textProperty: string) {
 
   figma.currentPage.selection = newInstances;
   figma.viewport.scrollAndZoomIntoView(newInstances);
+  figma.notify(`Created ${newInstances.length} new instances.`);
 }
 
 // Function to handle replacing text within selected instances based on the text list
 async function handleReplaceTextInstances(textList: string, textProperty: string) {
+  console.log("Handling replace text instances:", { textList, textProperty });
   const lines: string[] = textList
     .split("\n")
     .filter((line: string) => line.trim() !== "");
   const selectedNodes = figma.currentPage.selection;
+
+  console.log("Selected nodes:", selectedNodes);
 
   if (selectedNodes.length === 0 || selectedNodes.some(node => node.type !== "INSTANCE")) {
     figma.notify("Please select one or more component instances.");
@@ -128,7 +136,7 @@ async function handleReplaceTextInstances(textList: string, textProperty: string
     }
   });
 
-  figma.notify("Text replaced in selected instances.");
+  figma.notify(`Text replaced in ${selectedNodes.length} selected instances.`);
 }
 
 // Initial call to update the selection when the plugin is first loaded
