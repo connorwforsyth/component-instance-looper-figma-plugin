@@ -6,8 +6,6 @@
   </head>
   <body class="p-2 bg-gray-100">
     <div class="flex flex-col gap-2 h-full">
-      <h2 class="font-bold mb-4">Text List to Component Instances</h2>
-      <!-- Textarea for inputting the text list -->
       <textarea
         class="focus:border-2 focus:outline-none border-2 border-gray-300 p-2 text-sm rounded-md resize-none w-full h-48 mb-4"
         id="text-list-input"
@@ -16,11 +14,20 @@
 
       <!-- Display the currently selected component instance -->
       <div class="*:text-gray-600" id="selected-component">
-        <p>Select a single component instance on the canvas to generate instances.</p>
-        <p>Select multiple component instances on the canvas to replace text in instances.</p>
+        <p>
+          Select a single component instance on the canvas to generate
+          instances.
+        </p>
+        <p>
+          Select multiple component instances on the canvas to replace text in
+          instances.
+        </p>
       </div>
 
-      <div id="generate-buttons" class="hidden *:mb-2 *:text-sm *:p-2 *:rounded-md">
+      <div
+        id="generate-buttons"
+        class="hidden *:mb-2 *:text-sm *:p-2 *:rounded-md"
+      >
         <!-- Dropdown to select the text property of the selected component instance -->
         <select
           id="text-property-select"
@@ -37,7 +44,9 @@
           disabled
         >
           Generate Instances
-          <span class="inline-flex gap-[4px] pl-4 text-xs text-white font-semibold *:rounded-sm *:px-[4px] *:py-[2px] *:bg-blue-500">
+          <span
+            class="inline-flex gap-[4px] pl-4 text-xs text-white font-semibold *:rounded-sm *:px-[4px] *:py-[2px] *:bg-blue-500"
+          >
             <span>⌘</span>
             <span>↵</span>
           </span>
@@ -57,7 +66,9 @@
       <!-- Display the count of lines in the text list -->
       <div class="font-mono text-xs font w-full border-t-2 py-2">
         <span id="line-count" class="font-bold">0</span>
-        <span class="text-gray-700"> Instances to <span id="selection-action">create</span></span>
+        <span class="text-gray-700">
+          Instances to <span id="selection-action">create</span></span
+        >
       </div>
     </div>
     <script>
@@ -76,8 +87,13 @@
 
       function GenerateInstances() {
         const textList = document.getElementById("text-list-input").value;
-        const textProperty = document.getElementById("text-property-select").value;
-        console.log("Sending generate-instances message:", { textList, textProperty });
+        const textProperty = document.getElementById(
+          "text-property-select"
+        ).value;
+        console.log("Sending generate-instances message:", {
+          textList,
+          textProperty,
+        });
         parent.postMessage(
           {
             pluginMessage: {
@@ -111,8 +127,13 @@
 
       function ReplaceTextInInstances() {
         const textList = document.getElementById("text-list-input").value;
-        const textProperty = document.getElementById("text-property-select").value;
-        console.log("Sending replace-text-instances message:", { textList, textProperty });
+        const textProperty = document.getElementById(
+          "text-property-select"
+        ).value;
+        console.log("Sending replace-text-instances message:", {
+          textList,
+          textProperty,
+        });
         parent.postMessage(
           {
             pluginMessage: {
@@ -142,8 +163,11 @@
       // Function to handle messages from the plugin
       onmessage = (event) => {
         const message = event.data.pluginMessage;
-        const selectedComponentDiv = document.getElementById("selected-component");
-        const textPropertySelect = document.getElementById("text-property-select");
+        const selectedComponentDiv =
+          document.getElementById("selected-component");
+        const textPropertySelect = document.getElementById(
+          "text-property-select"
+        );
         const generateButton = document.getElementById("generate-button");
         const replaceButton = document.getElementById("replace-button");
 
@@ -159,7 +183,8 @@
             generateButtons.classList.add("hidden");
           }
 
-          textPropertySelect.innerHTML = '<option value="">Select text property</option>';
+          textPropertySelect.innerHTML =
+            '<option value="">Select text property</option>';
 
           // Populate the dropdown with the available text properties
           message.properties.forEach((property) => {

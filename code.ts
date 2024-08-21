@@ -1,10 +1,13 @@
-figma.showUI(__html__, { width: 300, height: 600 });
+figma.showUI(__html__, { width: 300, height: 550 });
 
 // Function to update the UI with the current selection
 async function updateSelection() {
   const selectedNodes = figma.currentPage.selection;
 
-  if (selectedNodes.length === 0 || selectedNodes.some(node => node.type !== "INSTANCE")) {
+  if (
+    selectedNodes.length === 0 ||
+    selectedNodes.some((node) => node.type !== "INSTANCE")
+  ) {
     figma.ui.postMessage({
       type: "update-selection",
       componentName: null,
@@ -82,7 +85,7 @@ async function handleGenerateInstances(textList: string, textProperty: string) {
 
   // Check if the instance is inside a frame
   const parent = instance.parent;
-  if (parent && parent.type === 'FRAME') {
+  if (parent && parent.type === "FRAME") {
     for (let i = 0; i < lines.length; i++) {
       const newInstance = instance.clone();
       newInstance.y = instance.y + (instanceHeight + spacing) * (i + 1);
@@ -106,7 +109,10 @@ async function handleGenerateInstances(textList: string, textProperty: string) {
 }
 
 // Function to handle replacing text within selected instances based on the text list
-async function handleReplaceTextInstances(textList: string, textProperty: string) {
+async function handleReplaceTextInstances(
+  textList: string,
+  textProperty: string
+) {
   console.log("Handling replace text instances:", { textList, textProperty });
   const lines: string[] = textList
     .split("\n")
@@ -115,13 +121,18 @@ async function handleReplaceTextInstances(textList: string, textProperty: string
 
   console.log("Selected nodes:", selectedNodes);
 
-  if (selectedNodes.length === 0 || selectedNodes.some(node => node.type !== "INSTANCE")) {
+  if (
+    selectedNodes.length === 0 ||
+    selectedNodes.some((node) => node.type !== "INSTANCE")
+  ) {
     figma.notify("Please select one or more component instances.");
     return;
   }
 
   if (lines.length !== selectedNodes.length) {
-    figma.notify("The number of lines in the text list does not match the number of selected instances.");
+    figma.notify(
+      "The number of lines in the text list does not match the number of selected instances."
+    );
     return;
   }
 

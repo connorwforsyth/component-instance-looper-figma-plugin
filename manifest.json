@@ -1,11 +1,16 @@
 {
-  "name": "Text String to Component instance",
-  "id": "1402909217092097896",
+  "name": "Component Instance Looper",
+  "id": "1407990267135453590",
   "api": "1.0.0",
   "main": "code.js",
   "capabilities": [],
   "enableProposedApi": false,
   "documentAccess": "dynamic-page",
+  "parameters": [
+      {
+        "name": "Icon name",
+        "key": "plugin-icon"
+      }],
   "editorType": [
     "figma"
   ],

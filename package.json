@@ -1,7 +1,7 @@
 {
-  "name": "Text-String-to-Component-instance",
+  "name": "component-instance-looper",
   "version": "1.0.0",
-  "description": "Your Figma Plugin",
+  "description": "Generate and replace text within component instances at speed.",
   "main": "code.js",
   "scripts": {
     "build": "tsc -p tsconfig.json",
