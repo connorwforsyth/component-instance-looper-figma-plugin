@@ -9,3 +9,9 @@ This is suitable if you have many component instances to create or edit, and you
 You can also replace text in selected instances and specify which variable you wish to replace.
 
 This workflow reduces context switching and dramatically speeds up efficiency for designers while adding content to their components instances.
+
+
+-+-+-+-+-+-+-+-
+
+By [Connor](https://connorforsyth.co?ref=figma-plugin-component-looper)
+[Contribute](https://github.com/connorwforsyth/component-instance-looper-figma-plugin/), [raise an issue](https://github.com/connorwforsyth/component-instance-looper-figma-plugin/issues/new), or [buy my a coffee](https://buymeacoffee.com/connorforsyth).
