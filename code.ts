@@ -85,7 +85,10 @@ async function handleGenerateInstances(textList: string, textProperty: string) {
 
   // Check if the instance is inside a frame
   const parent = instance.parent;
-  if (parent && parent.type === "FRAME") {
+  if (
+    (parent && parent.type === "FRAME") ||
+    (parent && parent.type === "SECTION")
+  ) {
     for (let i = 0; i < lines.length; i++) {
       const newInstance = instance.clone();
       newInstance.y = instance.y + (instanceHeight + spacing) * (i + 1);
