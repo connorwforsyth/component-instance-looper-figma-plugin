@@ -83,8 +83,8 @@ async function handleGenerateInstances(textList: string, textProperty: string) {
 
   const newInstances: InstanceNode[] = [];
 
-  // Check if the instance is inside a frame
   const parent = instance.parent;
+  // Check if the instance is inside a frame or a section.
   if (
     (parent && parent.type === "FRAME") ||
     (parent && parent.type === "SECTION")
