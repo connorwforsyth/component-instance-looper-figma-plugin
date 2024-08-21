@@ -6,11 +6,6 @@
   "capabilities": [],
   "enableProposedApi": false,
   "documentAccess": "dynamic-page",
-  "parameters": [
-      {
-        "name": "Icon name",
-        "key": "plugin-icon"
-      }],
   "editorType": [
     "figma"
   ],
