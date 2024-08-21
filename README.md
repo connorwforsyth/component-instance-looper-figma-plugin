@@ -14,4 +14,5 @@ This workflow reduces context switching and dramatically speeds up efficiency fo
 -+-+-+-+-+-+-+-
 
 By [Connor](https://connorforsyth.co?ref=figma-plugin-component-looper)
+
 [Contribute](https://github.com/connorwforsyth/component-instance-looper-figma-plugin/), [raise an issue](https://github.com/connorwforsyth/component-instance-looper-figma-plugin/issues/new), or [buy my a coffee](https://buymeacoffee.com/connorforsyth).
